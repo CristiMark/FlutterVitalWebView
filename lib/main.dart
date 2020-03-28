@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 //import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
@@ -46,14 +47,32 @@ class RunJSInWebViewState extends State<RunJSInWebView> {
   @override
   void initState(){
     super.initState();
-    flutterWebviewPlugin.evalJavascript("alert('Inducesmile.com')");
+   // flutterWebviewPlugin.evalJavascript("alert('Inducesmile.com')");
     
+            flutterWebviewPlugin.onStateChanged.listen((viewState) async {
+      if (viewState.type == WebViewState.finishLoad) {
+        flutterWebviewPlugin.evalJavascript("alert('Inducesmile.com')");
+      }
+    });
   }
+
+
   @override
   void dispose() {
     flutterWebviewPlugin.dispose();
     super.dispose();
   }
+
+  Future<String> loadJS(String name) async {
+  var givenJS = rootBundle.loadString('assets/$name.js');
+  return givenJS.then((String js) {
+        flutterWebviewPlugin.onStateChanged.listen((viewState) async {
+      if (viewState.type == WebViewState.finishLoad) {
+        flutterWebviewPlugin.evalJavascript(js);
+      }
+    });
+  });
+}
 
   @override
   Widget build(BuildContext context) {
