@@ -48,12 +48,12 @@ class RunJSInWebViewState extends State<RunJSInWebView> {
   void initState(){
     super.initState();
    // flutterWebviewPlugin.evalJavascript("alert('Inducesmile.com')");
-    
-            flutterWebviewPlugin.onStateChanged.listen((viewState) async {
-      if (viewState.type == WebViewState.finishLoad) {
-        flutterWebviewPlugin.evalJavascript("alert('Inducesmile.com')");
-      }
-    });
+    loadJS();
+    //         flutterWebviewPlugin.onStateChanged.listen((viewState) async {
+    //   if (viewState.type == WebViewState.finishLoad) {
+    //     flutterWebviewPlugin.evalJavascript("alert('Inducesmile.com')");
+    //   }
+    // });
   }
 
 
@@ -63,14 +63,15 @@ class RunJSInWebViewState extends State<RunJSInWebView> {
     super.dispose();
   }
 
-  Future<String> loadJS(String name) async {
-  var givenJS = rootBundle.loadString('assets/$name.js');
+  Future<String> loadJS() async {
+  var givenJS = rootBundle.loadString('assets/login.js');
   return givenJS.then((String js) {
         flutterWebviewPlugin.onStateChanged.listen((viewState) async {
       if (viewState.type == WebViewState.finishLoad) {
         flutterWebviewPlugin.evalJavascript(js);
       }
     });
+    return;
   });
 }
 
