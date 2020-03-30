@@ -47,13 +47,9 @@ class RunJSInWebViewState extends State<RunJSInWebView> {
   @override
   void initState(){
     super.initState();
-   // flutterWebviewPlugin.evalJavascript("alert('Inducesmile.com')");
     loadJS();
-    //         flutterWebviewPlugin.onStateChanged.listen((viewState) async {
-    //   if (viewState.type == WebViewState.finishLoad) {
-    //     flutterWebviewPlugin.evalJavascript("alert('Inducesmile.com')");
-    //   }
-    // });
+    
+
   }
 
 
@@ -68,9 +64,10 @@ class RunJSInWebViewState extends State<RunJSInWebView> {
   return givenJS.then((String js) {
         flutterWebviewPlugin.onStateChanged.listen((viewState) async {
       if (viewState.type == WebViewState.finishLoad) {
-        flutterWebviewPlugin.evalJavascript(js);
+        flutterWebviewPlugin.evalJavascript(js);  
       }
     });
+    flutterWebviewPlugin.reloadUrl("https://plati.vitalmm.ro/plata.jsf;jsessionid=944C833F0538EF0DC6766C59ACFC137B");
     return;
   });
 }
@@ -80,6 +77,7 @@ class RunJSInWebViewState extends State<RunJSInWebView> {
     return WebviewScaffold(
       url: 'https://plati.vitalmm.ro/login.jsp',
      // hidden: true,
+     withZoom: true,
       appBar: AppBar(title: Text("MyVital")),
       
     );
