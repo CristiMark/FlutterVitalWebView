@@ -1,4 +1,6 @@
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 //import 'package:webview_flutter/webview_flutter.dart';
@@ -48,9 +50,13 @@ class RunJSInWebViewState extends State<RunJSInWebView> {
   void initState(){
     super.initState();
     loadJS();
-    flutterWebviewPlugin.onUrlChanged.listen((String url) {
+    
+   flutterWebviewPlugin.onUrlChanged.where((x) => x.contains("welcome")).listen((String url) {
       if (mounted) {
         print("Current URL: $url");
+            var newurl = url.replaceRange(url.lastIndexOf('/')+1,url.lastIndexOf('.'), "plata");
+            print("New Address :  $newurl ");
+            flutterWebviewPlugin.reloadUrl(newurl);
       }
     });
     
@@ -70,8 +76,7 @@ class RunJSInWebViewState extends State<RunJSInWebView> {
       if (viewState.type == WebViewState.finishLoad) {
         flutterWebviewPlugin.evalJavascript(js);  
       }
-    });
-    flutterWebviewPlugin.reloadUrl("https://plati.vitalmm.ro/welcome.jsf;jsessionid=4FC7C694CEB8D9FAD5B9D6037A089005?Adf-Window-Id=w0");
+    });    
     return;
   });
 }
