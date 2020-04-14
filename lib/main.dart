@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 //import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:local_auth/local_auth.dart';
 
 void main() {
   runApp(MyApp());
@@ -45,12 +46,21 @@ class RunJSInWebView extends StatefulWidget {
 
 class RunJSInWebViewState extends State<RunJSInWebView> {
   final flutterWebviewPlugin = new FlutterWebviewPlugin();
+  final LocalAuthentication auth = LocalAuthentication();
+  bool _canCheckBiometrics;
+  List<BiometricType> _availableBiometrics;
+  String _authorized = 'Not Authorized';
+  bool _isAuthenticating = false;
 
   @override
   void initState(){
     super.initState();
-    loadJS();
-    loadPayPage();
+    checkBiometrics();
+    getAvailableBiometrics();
+    authenticate();
+
+  
+   // cancelAuthentication();
   }
   
   @override
@@ -71,6 +81,7 @@ class RunJSInWebViewState extends State<RunJSInWebView> {
   });
 }
 
+
 void loadPayPage(){
       
    flutterWebviewPlugin.onUrlChanged.where((x) => x.contains("welcome")).listen((String url) {
@@ -81,7 +92,73 @@ void loadPayPage(){
             flutterWebviewPlugin.reloadUrl(newurl);
       }
     });      
+
 }
+
+Future<void> checkBiometrics() async {
+    bool canCheckBiometrics;
+    try {
+      canCheckBiometrics = await auth.canCheckBiometrics;
+    } on PlatformException catch (e) {
+      print(e);
+    }
+    if (!mounted) return;
+
+    setState(() {
+      _canCheckBiometrics = canCheckBiometrics;
+    });
+  }
+
+  Future<void> getAvailableBiometrics() async {
+    List<BiometricType> availableBiometrics;
+    try {
+      availableBiometrics = await auth.getAvailableBiometrics();
+    } on PlatformException catch (e) {
+      print(e);
+    }
+    if (!mounted) return;
+
+    setState(() {
+      _availableBiometrics = availableBiometrics;
+    });
+  }
+
+  Future<void> authenticate() async {
+    bool authenticated = false;
+    try {
+      setState(() {
+        _isAuthenticating = true;
+        _authorized = 'Authenticating';
+      });
+      authenticated = await auth.authenticateWithBiometrics(
+          localizedReason: 'Scan your fingerprint to authenticate',
+          useErrorDialogs: true,
+          stickyAuth: true);    
+
+      if(authenticated){
+         flutterWebviewPlugin.reloadUrl("https://plati.vitalmm.ro/login.jsp");
+          loadJS();
+          loadPayPage();
+        }     
+      setState(() {
+        _isAuthenticating = false;
+        _authorized = 'Authenticating';
+      });
+    } on PlatformException catch (e) {
+      print(e);
+    }
+    if (!mounted) return;
+
+    final String message = authenticated ? 'Authorized' : 'Not Authorized';
+    setState(() {
+      _authorized = message;
+    });
+
+  }
+
+  // void cancelAuthentication() {
+  //   auth.stopAuthentication();
+  // }
 
   @override
   Widget build(BuildContext context) {
