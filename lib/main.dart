@@ -55,8 +55,8 @@ class RunJSInWebViewState extends State<RunJSInWebView> {
   @override
   void initState(){
     super.initState();
-    checkBiometrics();
-    getAvailableBiometrics();
+   // checkBiometrics();
+   // getAvailableBiometrics();
     authenticate();
 
   
