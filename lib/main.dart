@@ -55,8 +55,8 @@ class RunJSInWebViewState extends State<RunJSInWebView> {
   @override
   void initState(){
     super.initState();
-   // checkBiometrics();
-   // getAvailableBiometrics();
+    //checkBiometrics();
+    //getAvailableBiometrics();
     authenticate();
 
   
@@ -89,10 +89,25 @@ void loadPayPage(){
         print("Current URL: $url");
             var newurl = url.replaceRange(url.lastIndexOf('/')+1,url.lastIndexOf('.'), "plata");
             print("New Address :  $newurl ");
-            flutterWebviewPlugin.reloadUrl(newurl);
+            flutterWebviewPlugin.reloadUrl(newurl).whenComplete(() => 
+           makeAllPaymant()
+           
+            );
+          
+            
       }
     });      
 
+}
+
+void makeAllPaymant()
+{
+   new Future.delayed(const Duration(seconds: 3), () =>
+  flutterWebviewPlugin.evalJavascript('''document.getElementById('addall').click();
+                                      document.getElementById('cont_plata2').click();'''));
+
+   new Future.delayed(const Duration(seconds: 5), () =>
+  flutterWebviewPlugin.evalJavascript('''document.getElementById('j_idt72').click();'''));
 }
 
 Future<void> checkBiometrics() async {
