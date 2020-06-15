@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1000624612468",
+    "firebase_url": "https://vital-flutter.firebaseio.com",
+    "project_id": "vital-flutter",
+    "storage_bucket": "vital-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1000624612468:android:67633f85e6c6ed4c781d21",
+        "android_client_info": {
+          "package_name": "com.example.vitalflutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1000624612468-bfpj7fjfqq6kutbpj20v8e74uvt1f9ll.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.vitalflutter",
+            "certificate_hash": "e654d63d3d8a8042405884a240f6089fb765f313"
+          }
+        },
+        {
+          "client_id": "1000624612468-5l6thndogjb3srajp4p2j2iq1v15gin7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBP8NSkfh2UhWpFRasCsTWqrGZ1QmPoxnM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1000624612468-5l6thndogjb3srajp4p2j2iq1v15gin7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

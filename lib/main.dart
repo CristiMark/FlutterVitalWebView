@@ -1,11 +1,16 @@
 
 import 'dart:async';
+//import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 //import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:vitalflutter/credention_page.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:vitalflutter/login_page.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -17,7 +22,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter WebView',
-      debugShowCheckedModeBanner: false,
+      
+      debugShowCheckedModeBanner: false,   
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -28,10 +34,18 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.red,
+        primarySwatch: Colors.red,       
       ),
-      
-      home: RunJSInWebView(),
+     // home: RunJSInWebView(),
+     initialRoute: '/',
+      routes: {
+    // When navigating to the "/" route, build the FirstScreen widget.
+    '/': (context) => RunJSInWebView(),
+    // When navigating to the "/second" route, build the SecondScreen widget.
+    '/credential': (context) => CredentionsPage(),
+  },
+
+    //  home: LoginPage(),
      // home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -47,6 +61,7 @@ class RunJSInWebView extends StatefulWidget {
 class RunJSInWebViewState extends State<RunJSInWebView> {
   final flutterWebviewPlugin = new FlutterWebviewPlugin();
   final LocalAuthentication auth = LocalAuthentication();
+  String _url = 'https://plati.vitalmm.ro/login.jsp';
   bool _canCheckBiometrics;
   List<BiometricType> _availableBiometrics;
   String _authorized = 'Not Authorized';
@@ -57,7 +72,8 @@ class RunJSInWebViewState extends State<RunJSInWebView> {
     super.initState();
     //checkBiometrics();
     //getAvailableBiometrics();
-    authenticate();
+
+    //authenticate();
 
   
    // cancelAuthentication();
@@ -102,6 +118,7 @@ void loadPayPage(){
 
 void makeAllPaymant()
 {
+  
    new Future.delayed(const Duration(seconds: 3), () =>
   flutterWebviewPlugin.evalJavascript('''document.getElementById('addall').click();
                                       document.getElementById('cont_plata2').click();'''));
@@ -119,6 +136,10 @@ Future<void> checkBiometrics() async {
     }
     if (!mounted) return;
 
+        canCheckBiometrics
+        ? print('Biometric is available!')
+        : print('Biometric is unavailable.');
+
     setState(() {
       _canCheckBiometrics = canCheckBiometrics;
     });
@@ -135,6 +156,7 @@ Future<void> checkBiometrics() async {
 
     setState(() {
       _availableBiometrics = availableBiometrics;
+     
     });
   }
 
@@ -170,6 +192,7 @@ Future<void> checkBiometrics() async {
     });
 
   }
+  
 
   // void cancelAuthentication() {
   //   auth.stopAuthentication();
@@ -178,10 +201,34 @@ Future<void> checkBiometrics() async {
   @override
   Widget build(BuildContext context) {
     return WebviewScaffold(
-      url: 'https://plati.vitalmm.ro/login.jsp',
-     // hidden: true,
+     url: _url,           
+    // url: '', 
+    
+    hidden: true,          
      withZoom: true,
-      appBar: AppBar(title: Text("My Vital Acount")),
+      appBar: AppBar(
+       title: Text("My Vital Acount"),
+       actions: <Widget>[
+          // IconButton(
+          //   icon: const Icon(Icons.add_alert),
+          //   tooltip: 'Show Snackbar',
+          //   onPressed: () {
+          //    // scaffoldKey.currentState.showSnackBar(snackBar);
+          //   },
+          // ),
+          IconButton(
+            icon: const Icon(Icons.account_circle),
+            tooltip: 'Autentificare',
+            onPressed: () {
+              setState(() {
+                _url = "";
+              });
+            Navigator.pushNamed(context, '/credential');
+                    
+            },
+          ),
+        ],
+        ),   
       
     );
   }
